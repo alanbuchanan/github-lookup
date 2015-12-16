@@ -23,20 +23,22 @@ var Card = React.createClass({
         return {data: {}};
     },
 
+    setData: function (logins) {
+        this.setState({data: logins});
+    },
+
     componentDidMount: function () {
 
-        var component = this;
-
-        $.get('https://api.github.com/users/' + this.props.userInput, function (data) {
-            component.setState(data);
-        })
+        $.get('https://api.github.com/users/' + this.props.userInput, function (logins) {
+            this.setData(logins);
+        }.bind(this))
     },
 
     render: function () {
         return (
             <div>
-                <h3>{this.state.login}</h3>
-                <img src={this.state.avatar_url} width="80"/>
+                <h3>{this.state.data.login}</h3>
+                <img src={this.state.data.avatar_url} width="80"/>
                 <hr/>
             </div>
         );
@@ -55,8 +57,8 @@ var Main = React.createClass({
 
     render: function () {
 
-        var cards = this.state.logins.map(function (login) {
-            return <Card userInput={login}/>
+        var cards = this.state.logins.map(function (login, i) {
+            return <Card userInput={login} key={i}/>
         });
 
         return (
